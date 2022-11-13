@@ -1,9 +1,8 @@
-#include "sensesp/sensors/analog_input.h"
-#include "sensesp/sensors/digital_input.h"
-#include "sensesp/sensors/sensor.h"
-#include "sensesp/signalk/signalk_output.h"
-#include "sensesp/system/lambda_consumer.h"
 #include "sensesp_app_builder.h"
+
+#include "ds18b20_temp_sensors.h"
+#include "rpm_counter.h"
+#include "voltage_sensor.h"
 
 using namespace sensesp;
 
@@ -20,6 +19,10 @@ void setup() {
     sensesp_app = (&builder)
         ->set_hostname("sensor-engine")
         ->get_app();
+
+    configureTempSensors();
+    configureRPMCounter();
+    configureVoltageSensor();
 
     // Start networking, SK server connections and other SensESP internals
     sensesp_app->start();
