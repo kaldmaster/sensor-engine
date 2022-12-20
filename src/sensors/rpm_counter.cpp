@@ -44,7 +44,7 @@ void configureRPMCounter() {
     // a frequency. The sample multiplier converts the 97 tooth
     // tach output into Hz, SK native units.
     const float multiplier = 100.0;
-    const unsigned int read_delay = 5000;
+    const unsigned int read_delay = 1000;
 
     // Wire it all up by connecting the producer directly to the consumer
     // ESP32 pins are specified as just the X in GPIOX
@@ -53,6 +53,7 @@ void configureRPMCounter() {
     auto* sensor = new DigitalInputCounter(pin, INPUT_PULLUP, RISING, read_delay);
 
     auto log_function = [](float rpm) -> float {
+        Serial.print("RPM: ");
         Serial.println(rpm);
         return rpm;
     };
@@ -60,5 +61,5 @@ void configureRPMCounter() {
     sensor
         ->connect_to(new Frequency(multiplier, config_path_calibrate))
         //->connect_to(new LambdaTransform<float, float>(log_function))
-        ->connect_to(new SKOutputFloat(sk_path, config_path_skpath));
+        ->connect_to(new SKOutputFloat(sk_path, config_path_skpath, new SKMetadata("Hz", "Engine RPM")));
 }

@@ -1,8 +1,10 @@
+
 #include "sensesp_app_builder.h"
 
-#include "ds18b20_temp_sensors.h"
-#include "rpm_counter.h"
-#include "voltage_sensor.h"
+// #include "sensors/ds18b20_temp_sensors.h"
+#include "sensors/rpm_counter.h"
+#include "sensors/voltage_sensor.h"
+#include "sensors/coolant_temp_sensor.h"
 
 using namespace sensesp;
 
@@ -18,11 +20,13 @@ void setup() {
     SensESPAppBuilder builder;
     sensesp_app = (&builder)
         ->set_hostname("sensor-engine")
+        ->set_sk_server("192.168.10.196", 3000)
         ->get_app();
 
-    configureTempSensors();
+    // configureTempSensors();
     configureRPMCounter();
     configureVoltageSensor();
+    configureCoolantTempSensor();
 
     // Start networking, SK server connections and other SensESP internals
     sensesp_app->start();

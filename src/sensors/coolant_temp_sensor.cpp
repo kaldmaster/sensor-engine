@@ -1,12 +1,12 @@
-#include "voltage_sensor.h"
+#include "coolant_temp_sensor.h"
 
-void configureVoltageSensor() {
+void configureCoolantTempSensor() {
     // The "Signal K path" identifies this sensor to the Signal K server. Leaving
     // this blank would indicate this particular sensor (or transform) does not
     // broadcast Signal K data.
     // To find valid Signal K Paths that fits your need you look at this link:
     // https://signalk.org/specification/1.4.0/doc/vesselsBranch.html
-    const char* sk_path = "environment.indoor.illuminance";
+    const char* sk_path = "propulsion.engine.coolantTemperature";
 
     // The "Configuration path" is combined with "/config" to formulate a URL
     // used by the RESTful API for retrieving or setting configuration data.
@@ -16,8 +16,8 @@ void configureVoltageSensor() {
     // that indicates this sensor or transform does not have any
     // configuration to save, or that you're not interested in doing
     // run-time configuration.
-    const char* analog_in_config_path = "/indoor_illuminance/analog_in";
-    const char* linear_config_path = "/indoor_illuminance/linear";
+    const char* analog_in_config_path = "/sensors/engine_coolant_temperature/analog_in";
+    const char* linear_config_path = "/sensors/engine_coolant_temperature/linear";
 
     // Create a sensor that is the source of the data, which will be read every
     // 500 ms. It's a light sensor that's connected to the ESP's AnalogIn pin.
@@ -28,7 +28,7 @@ void configureVoltageSensor() {
     uint8_t pin = 9;
     unsigned int read_delay = 500;
 
-    auto* analog_input = new AnalogInput(pin, read_delay, analog_in_config_path);
+    auto* analog_input = new AnalogInputC3(pin, read_delay, analog_in_config_path);
 
     // A Linear transform takes its input, multiplies it by the multiplier, then
     // adds the offset, to calculate its output. In this example, the final output
@@ -58,6 +58,12 @@ void configureVoltageSensor() {
     const float multiplier = 0.00137;
     const float offset = -0.1644;
 
+    auto log_function = [](float value) -> float {
+        Serial.print("Coolant temperature: ");
+        Serial.println(value);
+        return value;
+    };
+
     // Connect the output of the analog input to the Linear transform,
     // and then output the results to the Signal K server. As part of
     // that output, send some metadata to indicate that the "units"
@@ -66,5 +72,6 @@ void configureVoltageSensor() {
     // consumer that displays it, is "Indoor light".
     analog_input
         ->connect_to(new Linear(multiplier, offset, linear_config_path))
-        ->connect_to(new SKOutputFloat(sk_path, "", new SKMetadata("ratio", "Indoor light")));
+        //->connect_to(new LambdaTransform<float, float>(log_function))
+        ->connect_to(new SKOutputFloat(sk_path, "", new SKMetadata("K", "Engine coolant temperature")));
 }
