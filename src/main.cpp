@@ -20,7 +20,9 @@ void setup() {
     SensESPAppBuilder builder;
     sensesp_app = (&builder)
         ->set_hostname("sensor-engine")
+#ifndef SERIAL_DEBUG_DISABLED // If debuging is enabled, try to connect to local debug server
         ->set_sk_server("192.168.10.196", 3000)
+#endif
         ->get_app();
 
     // configureTempSensors();
