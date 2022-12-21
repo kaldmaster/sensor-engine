@@ -55,8 +55,8 @@ void configureVoltageSensor() {
     // Bright = 850 analogRead units x 0.00137 = 1.1645
     //        1.1645 + -0.1644 = 1.0001 (rounds to 1.000)
 
-    const float multiplier = 0.00137;
-    const float offset = -0.1644;
+    const float multiplier = 15.52222222;
+    const float offset = 0;
 
     auto log_function = [](float value) -> float {
         Serial.print("Alternator voltage: ");
