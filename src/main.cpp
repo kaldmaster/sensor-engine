@@ -1,3 +1,4 @@
+//#define SERIAL_DEBUG_DISABLED true
 
 #include "sensesp_app_builder.h"
 

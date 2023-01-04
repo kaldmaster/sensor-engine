@@ -6,21 +6,21 @@ void configureTempSensors() {
 
     DallasTemperatureSensors* dts = new DallasTemperatureSensors(temp_pin);
 
-    auto* alternator_temp =
-        new OneWireTemperature(dts, temp_read_delay, "/alternatorTemperature/oneWire");
-    alternator_temp->connect_to(new Linear(1.0, 0.0, "/alternatorTemperature/linear"))
+    auto* alternator_temp = new OneWireTemperature(dts, temp_read_delay, "/alternatorTemperature/oneWire");
+    alternator_temp
+        ->connect_to(new Linear(1.0, 0.0, "/alternatorTemperature/linear"))
         ->connect_to(new SKOutputFloat("propulsion.engine.alternatorTemperature",
                                      "/alternatorTemperature/skPath"));
 
-    auto* exhaust_temp =
-        new OneWireTemperature(dts, temp_read_delay, "/exhaustTemperature/oneWire");
-    exhaust_temp->connect_to(new Linear(1.0, 0.0, "/exhaustTemperature/linear"))
+    auto* exhaust_temp = new OneWireTemperature(dts, temp_read_delay, "/exhaustTemperature/oneWire");
+    exhaust_temp
+        ->connect_to(new Linear(1.0, 0.0, "/exhaustTemperature/linear"))
         ->connect_to(new SKOutputFloat("propulsion.engine.exhaustTemperature",
                                      "/alternatorTemperature/skPath"));
 
-    auto* engine_room_temp =
-        new OneWireTemperature(dts, temp_read_delay, "/engineRoomTemperature/oneWire");
-    engine_room_temp->connect_to(new Linear(1.0, 0.0, "/engineRoomTemperature/linear"))
+    auto* engine_room_temp = new OneWireTemperature(dts, temp_read_delay, "/engineRoomTemperature/oneWire");
+    engine_room_temp
+        ->connect_to(new Linear(1.0, 0.0, "/engineRoomTemperature/linear"))
         ->connect_to(new SKOutputFloat("propulsion.engine.roomTemperature",
                                      "/engineRoomTemperature/skPath"));
 }
